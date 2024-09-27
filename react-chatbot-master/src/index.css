@@ -72,9 +72,9 @@
   dark:bg-light-grey;
   }
 
-  .chatview__chatarea {
+  /*.chatview__chatarea {
     @apply flex-grow w-full overflow-y-scroll flex flex-col shadow-md;
-  }
+  }*/
 
   .form {
     @apply flex  justify-between flex-col items-stretch sm:flex-row m-2 bottom-0 left-0 right-0

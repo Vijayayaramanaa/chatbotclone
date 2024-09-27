@@ -7,6 +7,7 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import Modal from './Modal';
 import Setting from './Setting';
 import PromptPerfect from './PromptPerfect';
+import axios from "axios"
 
 /**
  * A chat view component that displays a list of messages and a form for sending new messages.
@@ -20,13 +21,61 @@ const ChatView = () => {
   const [messages, addMessage] = useContext(ChatContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalPromptOpen, setModalPromptOpen] = useState(false);
+  const [apicall,setApiCall] = useState({})
 
   /**
    * Scrolls the chat area to the bottom.
-   */
+   * 
+  */
+
+  useEffect(()=>{
+    const getData = JSON.parse(localStorage.getItem("profile"))
+    if(getData&&formValue){
+     const {name,dob,zodiacSign,userid} = getData
+     const obj = {
+      inputText : formValue ,
+      sessionId : "user1",
+      zodiacSign : zodiacSign,
+      dob : dob
+    }
+    setApiCall(obj)
+     console.log(obj)
+    }
+  },[formValue])
+  {/*{
+          "inputText": "What will be the impact of my business in future?",
+          "sessionId": "user2",
+          "zodiacSign": "Cancer",
+          "dob": "25-06-1999"
+      } */}
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  
+    const getcall = async()=>{
+      console.log(apicall)
+      const api = "https://b7ubab56ze.execute-api.us-east-1.amazonaws.com/dev/chatbot";
+      try{
+        const response = await axios.post(api,apicall)
+      console.log(response)
+      setModalPromptOpen(true);
+      const msg = response.data.message
+      updateMessage(msg,true)
+      setLoading(true)
+    }catch(e){
+      console.log("Error",e.message)
+      updateMessage("Something Went wrong Please Try again later",true)
+      setLoading(false);
+      setModalPromptOpen(true);
+    
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+    
+    
+  
 
   /**
    * Adds a new message to the chat.
@@ -58,12 +107,13 @@ const ChatView = () => {
     const cleanPrompt = formValue.trim();
 
     const newMsg = cleanPrompt;
-
     setFormValue('');
+    setLoading(true)
+    getcall()
     updateMessage(newMsg, false);
 
-    const response = 'I am a bot. This feature will be coming soon.';
-    updateMessage(response, true);
+  // const response = 'Ask any thing.';
+   // updateMessage(response, true);
   };
 
   const handleKeyDown = (e) => {
@@ -71,6 +121,7 @@ const ChatView = () => {
       // 👇 Get input value
       sendMessage(e);
       inputRef.current.style.height = 'auto';
+      updatePrompt()
     }
   };
 
@@ -79,20 +130,20 @@ const ChatView = () => {
   };
 
   const updatePrompt = async () => {
-    const api = 'https://us-central1-prompt-ops.cloudfunctions.net/optimize';
-    const secretKey = process.env.REACT_APP_API_KEY;
+   
+  //  const secretKey = process.env.REACT_APP_API_KEY;
 
     try {
       setLoading(true);
-      const response = await fetch(api, {
+     {/* const response = await fetch(api, {
         headers: {
-          'x-api-key': `token ${secretKey}`,
+          //'x-api-key': `token ${secretKey}`,
           'content-type': 'application/json',
         },
         body: JSON.stringify({
           data: {
             prompt: formValue.trim(),
-            targetModel: 'chatgpt',
+          //  targetModel: 'chatgpt',
           },
         }),
         method: 'POST',
@@ -102,12 +153,14 @@ const ChatView = () => {
       }
 
       const responseData = await response.json();
-      setPrompt(responseData.result.promptOptimized);
-      setLoading(false);
+      console.log(responseData)
+      setPrompt(responseData.result.promptOptimized);*/}
+     
+   //   setLoading(false);
       setModalPromptOpen(true);
     } catch (e) {
       console.error(e);
-      setLoading(false);
+  //    setLoading(false);
     }
   };
 
@@ -137,15 +190,29 @@ const ChatView = () => {
 
   return (
     <div className="chatview">
-      <main className="chatview__chatarea w-screen">
+    {/*  <main className=" w-screen">
         {messages.map((message, index) => (
           <ChatMessage key={index} message={{ ...message }} />
         ))}
 
         <span ref={messagesEndRef}></span>
+      </main>*/}
+            <main className="flex-1 overflow-auto p-4 bg-gray-100 w-auto">
+              {loading ? <div className="flex flex-col gap-3 items-center justify-center h-screen">
+               <div className="loading-spinner border-4 border-t-4 border-gray-200 rounded-full w-16 h-16 animate-spin border-t-blue-500" />
+               <h1 className='text-blue-500 font-bold text-xl'>Loading...</h1>
+              </div>:
+              <div>
+                {messages.map((message, index) => (
+                     <div key={index}>
+                     <ChatMessage key={index} message={{ ...message }} />
+                     </div>
+                 ))}
+              </div>}
+        <span ref={messagesEndRef} />
       </main>
       <form className="form "  onSubmit={sendMessage}>
-        <div className="flex items-stretch justify-between w-full">
+        <div className="flex items-stretch justify-between w-screen">
           <textarea
             ref={inputRef}
             className="chatview__textarea-message"
@@ -153,12 +220,13 @@ const ChatView = () => {
             value={formValue}
             onKeyDown={handleKeyDown}
             onChange={handleChange}
+            disabled={loading}
           />
           <div className="flex items-center">
             <button type="submit" className="chatview__btn-send" disabled={!formValue}>
               <MdSend size={30} />
             </button>
-            <button
+         {/*   <button
               id="tooltip"
               type="button"
               className="chatview__btn-send"
@@ -166,7 +234,7 @@ const ChatView = () => {
               onClick={updatePrompt}
             >
               {loading ? <div className="loading-spinner" /> : <MdLightbulbOutline size={30} />}
-            </button>
+            </button>*/}
           </div>
         </div>
         <ReactTooltip
@@ -179,14 +247,14 @@ const ChatView = () => {
       <Modal title="Setting" modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <Setting modalOpen={modalOpen} setModalOpen={setModalOpen} />
       </Modal>
-      <Modal title="Prompt Perfect" modalOpen={modalPromptOpen} setModalOpen={setModalPromptOpen}>
+     {/* <Modal title="Prompt Perfect" modalOpen={modalPromptOpen} setModalOpen={setModalPromptOpen}>
         <PromptPerfect
           prompt={prompt}
           onChange={setPrompt}
           onCancelClicked={() => setModalPromptOpen(false)}
           onUseClicked={handleUseClicked}
         />
-      </Modal>
+      </Modal>*/}
     </div>
   );
 };

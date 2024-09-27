@@ -6,17 +6,13 @@ import { useState } from 'react';
  * @returns {Object} An object containing the `messages` array and the `addMessage` function.
  */
 const useMessageCollection = () => {
- /* const initialMsg = {
+  const initialMsg = {
     id: 1,
     createdAt: Date.now(),
-    text: `
-      // Example JavaScript code
-      const greeting = 'Hello, world!';
-      console.log(greeting);
-    `,
+    text: `Ask Me Anything  `,
     ai: true,
-  };*/
-  const [messages, setMessages] = useState([]);
+  };
+  const [messages, setMessages] = useState([initialMsg]);
 
   /**
    * A function for adding a new message to the collection.
@@ -27,7 +23,7 @@ const useMessageCollection = () => {
     setMessages((prev) => [...prev, message]);
   };
 
-  const clearMessages = () => setMessages([]);
+  const clearMessages = () => setMessages([initialMsg]);
 
   return [messages, addMessage, clearMessages];
 };

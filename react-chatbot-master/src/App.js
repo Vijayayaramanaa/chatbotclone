@@ -8,6 +8,12 @@ import Setting from './components/Setting';
 
 const App = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [data,setData] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleRefresh = () => {
+      setRefreshKey(prevKey => prevKey + 1); // Incrementing the key
+  };
 
   useEffect(() => {
     const apiKey = window.localStorage.getItem('api-key');
@@ -15,11 +21,21 @@ const App = () => {
       setModalOpen(true);
     }
   }, []);
+  useEffect(()=>{
+    const getData = JSON.parse(localStorage.getItem("profile"))
+    if(getData){
+      setData(true)
+      handleRefresh()
+    }
+  },[data])
   return (
-    <ChatContextProvider>
+    <ChatContextProvider><div>
+      { data ? null:
       <Modal title="Setting" modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <Setting modalOpen={modalOpen} setModalOpen={setModalOpen} />
       </Modal>
+      }
+    </div>
       <div className="flex transition duration-500 ease-in-out">
         <SideBar />
         <ChatView />
