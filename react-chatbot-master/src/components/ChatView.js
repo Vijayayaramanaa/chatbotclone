@@ -204,6 +204,7 @@ const ChatView = () => {
               </div>:
               <div>
                 {messages.map((message, index) => (
+                  
                      <div key={index}>
                      <ChatMessage key={index} message={{ ...message }} />
                      </div>

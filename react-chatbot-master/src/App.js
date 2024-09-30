@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ChatContextProvider } from './context/chatContext';
 import SideBar from './components/SideBar';
 import ChatView from './components/ChatView';
@@ -9,11 +9,8 @@ import Setting from './components/Setting';
 const App = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [data,setData] = useState(false)
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [check,setCheck] = useState(null)
 
-  const handleRefresh = () => {
-      setRefreshKey(prevKey => prevKey + 1); // Incrementing the key
-  };
 
   useEffect(() => {
     const apiKey = window.localStorage.getItem('api-key');
@@ -21,13 +18,18 @@ const App = () => {
       setModalOpen(true);
     }
   }, []);
-  useEffect(()=>{
+  const fetchProfileData = useCallback(()=>{
     const getData = JSON.parse(localStorage.getItem("profile"))
     if(getData){
       setData(true)
-      handleRefresh()
+      setCheck(getData)
+    }else{
+      setCheck(null)
     }
-  },[data])
+  },[check])
+  useEffect(()=>{
+      fetchProfileData()
+  },[])
   return (
     <ChatContextProvider><div>
       { data ? null:

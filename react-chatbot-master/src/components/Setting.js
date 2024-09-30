@@ -19,7 +19,6 @@ const Setting = ({ modalOpen, setModalOpen }) => {
       userid: id,
     }
    localStorage.setItem("profile",JSON.stringify(obj))
-
   };
    
  {/* useEffect(() => {
@@ -30,7 +29,9 @@ const Setting = ({ modalOpen, setModalOpen }) => {
       
     }
   }, [name, dob,zodiacSign, modalOpen]);*/}
-  useEffect(()=>{},[name,dob,zodiacSign,modalOpen])
+  useEffect(()=>{
+
+  },[name,dob,zodiacSign])
 
 
 
@@ -39,7 +40,7 @@ const Setting = ({ modalOpen, setModalOpen }) => {
  
     <form onSubmit={saveKey} className="flex flex-col items-center justify-center gap-2">
       <input
-        required
+        required = {true}
         value={name}
         placeholder="Enter your Name"
         onChange={(e) => setName(e.target.value)}
@@ -48,7 +49,7 @@ const Setting = ({ modalOpen, setModalOpen }) => {
         />
 
       <input
-        required
+        required = {true}
         value={dob}
         placeholder="DD-MM-YYY"
         onChange={(e) => setDob(e.target.value)}
@@ -56,7 +57,7 @@ const Setting = ({ modalOpen, setModalOpen }) => {
         className="w-full max-w-xs input input-bordered bg-white text-slate-700"
         />
       <input
-        required
+        required = {true}
         value={zodiacSign}
         placeholder="Enter you Zodiac Sign"
         onChange={(e) => setZodiacSign(e.target.value)}
@@ -66,6 +67,7 @@ const Setting = ({ modalOpen, setModalOpen }) => {
       <button
         className="w-full max-w-xs btn bg-blue-500 text-white border-none hover:bg-blue-500"
         onClick={() => setModalOpen(false)}
+        type='submit'
         >
        Next
       </button>
