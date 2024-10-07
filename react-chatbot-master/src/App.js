@@ -31,7 +31,8 @@ const App = () => {
       fetchProfileData()
   },[])
   return (
-    <ChatContextProvider><div>
+    <ChatContextProvider>
+      <div>
       { data ? null:
       <Modal title="Setting" modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <Setting modalOpen={modalOpen} setModalOpen={setModalOpen} />

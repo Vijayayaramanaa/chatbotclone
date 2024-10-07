@@ -33,6 +33,11 @@ const Setting = ({ modalOpen, setModalOpen }) => {
 
   },[name,dob,zodiacSign])
 
+  const handleButtonclick = ()=>{
+    setModalOpen(false)
+    window.location.reload();
+  }
+
 
 
   return (
@@ -66,7 +71,7 @@ const Setting = ({ modalOpen, setModalOpen }) => {
         />
       <button
         className="w-full max-w-xs btn bg-blue-500 text-white border-none hover:bg-blue-500"
-        onClick={() => setModalOpen(false)}
+        onClick={handleButtonclick}
         type='submit'
         >
        Next

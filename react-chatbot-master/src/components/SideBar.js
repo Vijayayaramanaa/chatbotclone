@@ -48,8 +48,7 @@ const SideBar = () => {
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
-  }, [fetchProfileData,handleClear]); // Only run on mount and when fetchProfileData changes
-  console.log(profileData)
+  }, []); // Only run on mount and when fetchProfileData changes
   return (
     <section className={` ${open ? 'w-screen lg:w-80' : 'w-16'} sidebar`}>
       <div className="sidebar__app-bar">
@@ -80,7 +79,7 @@ const SideBar = () => {
           </span>
         </div>
       </div>
-      <Modal title={profileData ? "Profile" : "Setting"} modalOpen={modalOpen} setModalOpen={setModalOpen}>
+      <Modal title={profileData ? "Profile" : "Details"} modalOpen={modalOpen} setModalOpen={setModalOpen}>
         {profileData ? (
           <div>
             <button type='button' onClick={()=>handleClear()} className='w-auto h-auto bg-blue-600 p-2 m-2 rounded-lg text-white'>Clear</button>

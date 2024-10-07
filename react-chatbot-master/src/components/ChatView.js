@@ -54,12 +54,12 @@ const ChatView = () => {
   
     const getcall = async()=>{
       console.log(apicall)
-      const api = "https://b7ubab56ze.execute-api.us-east-1.amazonaws.com/dev/chatbot";
+      const api = "https://swt6p22kkie7j6vculzufs3brm0vynks.lambda-url.us-east-1.on.aws/dev/chatbot";
       try{
         const response = await axios.post(api,apicall)
       console.log(response)
       setModalPromptOpen(true);
-      const msg = response.data.message
+      const msg = response
       updateMessage(msg,true)
       setLoading(true)
     }catch(e){
