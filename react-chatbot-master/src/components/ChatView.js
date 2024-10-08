@@ -31,15 +31,34 @@ const ChatView = () => {
   useEffect(()=>{
     const getData = JSON.parse(localStorage.getItem("profile"))
     if(getData&&formValue){
-     const {name,dob,zodiacSign,userid} = getData
+     const {name,dob,gender,location,time,address} = getData
+     const dateofBirth = dob.slice(0,10)
+     const newDob = dateofBirth.split('-')
+     const day = newDob[2]
+     const month = newDob[1]
+     const year = newDob[0]
+     const newTime = time.split(':')
+     const h = newTime[0]
+     const m = newTime[1]
+     const s = newTime[2]
+     
      const obj = {
+      name : name,
       inputText : formValue ,
       sessionId : "user1",
-      zodiacSign : zodiacSign,
-      dob : dob
+      gender : gender,
+      hour : h,
+      minutes: m,
+      seconds : s,
+      longitude : location.longitude,
+      lattitude : location.latitude,
+      day : day,
+      month : month,
+      year : year,
+      place : address,
+     // zodiacSign : "Cancer"
     }
     setApiCall(obj)
-     console.log(obj)
     }
   },[formValue])
   {/*{
@@ -48,23 +67,23 @@ const ChatView = () => {
           "zodiacSign": "Cancer",
           "dob": "25-06-1999"
       } */}
+       
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
   
     const getcall = async()=>{
-      console.log(apicall)
-      const api = "https://swt6p22kkie7j6vculzufs3brm0vynks.lambda-url.us-east-1.on.aws/dev/chatbot";
+    
+      const api = "https://swt6p22kkie7j6vculzufs3brm0vynks.lambda-url.us-east-1.on.aws/";
       try{
         const response = await axios.post(api,apicall)
-      console.log(response)
       setModalPromptOpen(true);
-      const msg = response
-      updateMessage(msg,true)
+      const msg = response.data.message
+      updateMessage(msg ? msg : response.error,true)
       setLoading(true)
     }catch(e){
       console.log("Error",e.message)
-      updateMessage("Something Went wrong Please Try again later",true)
+      updateMessage(`Oops ! ${e.message}`,true)
       setLoading(false);
       setModalPromptOpen(true);
     
@@ -182,6 +201,10 @@ const ChatView = () => {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
+  const handleButtonClick = () => {
+    setModalOpen(false);
+    window.location.reload();
+  };
 
   useEffect(() => {
     inputRef.current.style.height = 'auto';
@@ -197,7 +220,12 @@ const ChatView = () => {
 
         <span ref={messagesEndRef}></span>
       </main>*/}
-            <main className="flex-1 overflow-auto p-4 bg-gray-100 w-auto">
+        <main className="flex-1 overflow-auto p-4 bg-gray-100 w-auto relative">
+        <div style={{ position: "fixed", top: "10px", right: "10px" }}>
+        <button className='bg-black text-white p-3 rounded-lg font-bold' type='button' onClick={handleButtonClick}>
+           Clear Chat
+        </button>
+         </div>
               {loading ? <div className="flex flex-col gap-3 items-center justify-center h-screen">
                <div className="loading-spinner border-4 border-t-4 border-gray-200 rounded-full w-16 h-16 animate-spin border-t-blue-500" />
                <h1 className='text-blue-500 font-bold text-xl'>Loading...</h1>

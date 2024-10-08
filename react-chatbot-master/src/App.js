@@ -13,11 +13,11 @@ const App = () => {
 
 
   useEffect(() => {
-    const apiKey = window.localStorage.getItem('api-key');
-    if (!apiKey) {
-      setModalOpen(true);
+   const apiKey = window.localStorage.getItem('api-key');
+   if (!apiKey) {
+     setModalOpen(true);
     }
-  }, []);
+ }, []);
   const fetchProfileData = useCallback(()=>{
     const getData = JSON.parse(localStorage.getItem("profile"))
     if(getData){
@@ -25,16 +25,17 @@ const App = () => {
       setCheck(getData)
     }else{
       setCheck(null)
+      setData(false)
     }
-  },[check])
+  },[])
   useEffect(()=>{
       fetchProfileData()
   },[])
   return (
-    <ChatContextProvider>
+    <ChatContextProvider >
       <div>
       { data ? null:
-      <Modal title="Setting" modalOpen={modalOpen} setModalOpen={setModalOpen}>
+      <Modal title="Provide Details" modalOpen={modalOpen} setModalOpen={setModalOpen}>
         <Setting modalOpen={modalOpen} setModalOpen={setModalOpen} />
       </Modal>
       }

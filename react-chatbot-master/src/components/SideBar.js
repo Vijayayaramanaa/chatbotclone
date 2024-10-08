@@ -23,10 +23,12 @@ const SideBar = () => {
     const data =  JSON.parse(localStorage.getItem("profile"));
     setProfileData(data);
   };
-
+  const dateofBirth = profileData?.dob?.slice(0,10)
+  
   // Clear profile data from local storage
   const handleClear =useCallback( () => {
     localStorage.removeItem("profile");
+    window.location.reload()
     setProfileData(null); // Update state immediately
   },[]);
 
@@ -68,6 +70,7 @@ const SideBar = () => {
           )}
         </div>
       </div>
+      
 
       <div className="nav__bottom">
         <div onClick={() => setModalOpen(true)} className="nav">
@@ -76,7 +79,7 @@ const SideBar = () => {
               <CgProfile style={{ width: "30px", height: "30px" }} />
             </div>
             <h1 className={`${!open && 'hidden'} font-bold`}>Profile</h1>
-          </span>
+          </span>     
         </div>
       </div>
       <Modal title={profileData ? "Profile" : "Details"} modalOpen={modalOpen} setModalOpen={setModalOpen}>
@@ -87,12 +90,18 @@ const SideBar = () => {
               <div>
                 <h1 className='text-xl font-bold text-gray-800'>Name</h1>
                 <h1 className='text-xl font-bold text-gray-800'>DOB</h1>
-                <h1 className='text-xl font-bold text-gray-800'>Zodiac Sign</h1>
+                <h1 className='text-xl font-bold text-gray-800'>Time</h1>
+                <h1 className='text-xl font-bold text-gray-800'>Latitude</h1>
+                <h1 className='text-xl font-bold text-gray-800'>Longitude</h1>
+                <h1 className='text-xl font-bold text-gray-800'>Gender</h1>
               </div>
               <div className='flex flex-col font-bold text-xl'>
                 <span className='font-normal text-green-500 ml-3'>: {profileData.name}</span>
-                <span className='font-normal text-green-500 ml-3'>: {profileData.dob}</span>
-                <span className='font-normal text-green-500 ml-3'>: {profileData.zodiacSign}</span>
+                <span className='font-normal text-green-500 ml-3'>: {dateofBirth}</span>
+                <span className='font-normal text-green-500 ml-3'>: {profileData.time}</span>
+                <span className='font-normal text-green-500 ml-3'>: {profileData.location.latitude}</span>
+                <span className='font-normal text-green-500 ml-3'>: {profileData.location.longitude}</span>
+                <span className='font-normal text-green-500 ml-3'>: {profileData.gender}</span>
               </div>
             </div>
           </div>
